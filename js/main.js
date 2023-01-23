@@ -86,10 +86,9 @@ class Movie extends Production {
     #resource;
     #locations;
 
-    constructor(title, nationality, publication, synopsis, image, resource = "", locations = "") {
-        //Excepción que controla que resource sea una instancia de Person
-        if (!(resource instanceof Person)) throw new NotThisType();
-        if (!(locations instanceof Coordinate)) throw new NotThisType();
+    constructor(title, nationality, publication, synopsis, image, resource = [], locations = "") {
+        //Excepción que controla que locations sea una instancia de locations
+        // if (!(locations instanceof Coordinate)) throw new NotThisType();
 
         super(title, nationality, publication, synopsis, image)
         this.#resource = resource;
@@ -102,11 +101,11 @@ class Serie extends Production {
     #locations;
     #seasons;
 
-    constructor(title, nationality, publication, synopsis, image, resource = "", locations = "", seasons = "") {
+    constructor(title, nationality, publication, synopsis, image, resource = [], locations = [], seasons = "") {
         //Excepción que controla que locations sea una instancia de Coordinate
-        if (!(locations instanceof Coordinate)) throw new NotThisType();
+        // if (!(locations instanceof Coordinate)) throw new NotThisType();
         //Excepción que controla que resource sea una instancia de Person
-        if (!(resource instanceof Person)) throw new NotThisType();
+        // if (!(resource instanceof Resource)) throw new NotThisType();
 
         super(title, nationality, publication, synopsis, image);
         this.#resources = resource;
@@ -153,18 +152,18 @@ let VideoSystem = (function () { //La función anónima devuelve un método getI
         class VideoSystem {
             #name;
             #users;
-            #producciones;
+            #productions;
             #categorias;
-            #actores;
-            #directores;
+            #actors;
+            #directors;
 
             constructor(name, listaU = [], listaP = [], listaC = [], listaA = [], listaD = []) {
                 this.#name = name;
                 this.#users = listaU;
-                this.#producciones = listaP;
+                this.#productions = listaP;
                 this.#categorias = listaC;
-                this.#actores = listaA;
-                this.#directores = listaD;
+                this.#actors = listaA;
+                this.#directors = listaD;
             }
 
             get name() {
@@ -224,6 +223,9 @@ let VideoSystem = (function () { //La función anónima devuelve un método getI
 
             //Añade una usuario a la lista de usuarios
             addUser(usuario) {
+                if (usuario === null) throw new isNull (" User ");
+                if (!(usuario instanceof User)) throw new NotThisType(usuario.constructor.name);
+
                 for(let userList of this.#users){
                     //Controla que el nombre del usuario no se encuentre ya registrado
                     if (usuario.username == userList.username) throw new SameName(usuario.username);
@@ -236,6 +238,141 @@ let VideoSystem = (function () { //La función anónima devuelve un método getI
                 return this.#users.length;
             }
 
+            removeUser(usuario){
+                if (usuario === null) throw new isNull (" User ");
+                if (!(usuario instanceof User)) throw new NotThisType(usuario.constructor.name);
+
+                let i=this.findItemsLists(usuario, this.#users);
+                if (i == -1) throw new NotFound404(usuario);
+
+                this.#users.splice(i,1);
+
+                return this.#users.length;
+            }
+
+            //Iterador de producciones
+            get productions() {
+                let listProductions = this.#productions;
+                //Retorno el objeto [Symbol.iterator]
+                return {
+                    *[Symbol.iterator]() {
+                        for (let i = 0; i < listProductions.length; i++) {
+                            yield listProductions[i];
+                        }
+                    }
+                }
+            }
+
+            addProduction(produccion){
+                //Contrala que la produccion no sea igual a null
+                if (produccion === null) throw new isNull (" Production ");
+                //Controla que la produccion sea una instancia de Movie o Serie
+                if ((!(produccion instanceof Movie)) && (!(produccion instanceof Serie))) throw new NotThisType(produccion.constructor.name);
+                //Contrala que la producción a añadir no se encuentre ya en la lista
+                let i=this.findItemsLists(produccion, this.#productions);
+                if (i != -1) throw new ElementFound(produccion);
+
+                this.#productions.push(produccion);
+
+                return this.#productions.length;
+            }
+
+            removeProduction(produccion){
+                //Contrala que la produccion no sea igual a null
+                if (produccion === null) throw new isNull (" Production ");
+                //Controla que la produccion sea una instancia de Movie o Serie
+                if ((!(produccion instanceof Movie)) && (!(produccion instanceof Serie))) throw new NotThisType(produccion.constructor.name);
+                //Contrala que la producción a añadir se encuentre en la lista para poder eliminarla
+                let i=this.findItemsLists(produccion, this.#productions);
+                if (i == -1) throw new NotFound404(produccion);
+
+                this.#productions.splice(i,1);
+
+                return this.#productions.length;
+            }
+
+            //Iterador de producciones
+            get actors() {
+                let listActors = this.#actors;
+                //Retorno el objeto [Symbol.iterator]
+                return {
+                    *[Symbol.iterator]() {
+                        for (let i = 0; i < listActors.length; i++) {
+                            yield listActors[i];
+                        }
+                    }
+                }
+            }
+
+            addActor(actor){
+                //Contrala que el actor no sea igual a null
+                if (actor === null) throw new isNull (" Actor ");
+                //Controla que el actor sea una instancia de Person
+                if (!(actor instanceof Person)) throw new NotThisType(actor.constructor.name);
+                //Contrala que el actor a añadir se encuentre ya en la lista
+                let i=this.findItemsLists(actor, this.#actors);
+                if (i != -1) throw new ElementFound(actor);
+
+                this.#actors.push(actor);
+
+                return this.#actors.length;
+            }
+
+            removeActor(actor){
+                //Contrala que el actor no sea igual a null
+                if (actor === null) throw new isNull (" Actor ");
+                //Controla que el actor sea una instancia de Person
+                if (!(actor instanceof Person)) throw new NotThisType(actor.constructor.name);
+                //Contrala que el actor a añadir se encuentre en la lista para poder eliminarla
+                let i=this.findItemsLists(actor, this.#actors);
+                if (i == -1) throw new NotFound404(actor);
+
+                this.#actors.splice(i,1);
+
+                return this.#actors.length;
+            }
+
+            //Iterador de producciones
+            get directors() {
+                let listDirector = this.#directors;
+                //Retorno el objeto [Symbol.iterator]
+                return {
+                    *[Symbol.iterator]() {
+                        for (let i = 0; i < listDirector.length; i++) {
+                            yield listDirector[i];
+                        }
+                    }
+                }
+            }
+
+            addDirector(director){
+                //Contrala que el director no sea igual a null
+                if (director === null) throw new isNull (" Person ");
+                //Controla que el actor sea una instancia de Person
+                if (!(director instanceof Person)) throw new NotThisType(director.constructor.name);
+                //Contrala que el actor a añadir se encuentre ya en la lista
+                let i=this.findItemsLists(director, this.#directors);
+                if (i != -1) throw new ElementFound(director);
+
+                this.#directors.push(director);
+
+                return this.#directors.length;
+            }
+
+            removeDirector(director){
+                //Contrala que el actor no sea igual a null
+                if (director === null) throw new isNull (" Person ");
+                //Controla que el actor sea una instancia de Person
+                if (!(director instanceof Person)) throw new NotThisType(director.constructor.name);
+                //Contrala que el actor a añadir se encuentre en la lista para poder eliminarla
+                let i=this.findItemsLists(director, this.#directors);
+                if (i == -1) throw new NotFound404(director);
+
+                this.#directors.splice(i,1);
+
+                return this.#directors.length;
+            }
+
             /**
              * Función que buscará elementos en 
              * su respectiva lista
@@ -246,7 +383,7 @@ let VideoSystem = (function () { //La función anónima devuelve un método getI
              */
 
             findItemsLists(elem,lista){
-                //Posición del elemento a eliminar en la lista
+                //Posición del elemento en la lista
                 let i=0, j=-1;
 
                 for(let listaElem of lista){

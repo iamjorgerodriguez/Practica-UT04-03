@@ -22,15 +22,15 @@ class AbstractClass extends BaseException {
 }
 
 class NotThisType extends BaseException {
-    constructor(fileName, lineNumber) {
-        super("El tutor solo puede ser un Professor", fileName, lineNumber);
+    constructor(clase,fileName, lineNumber) {
+        super("El elemento no puede ser un/una "+clase, fileName, lineNumber);
         this.name = "NotThisType";
     }
 }
 
 class isNull extends BaseException {
-    constructor(atributo,fileName, lineNumber) {
-        super("El atributo "+atributo+" no puede ser vacío", fileName, lineNumber);
+    constructor(clase,fileName, lineNumber) {
+        super("No se puede añadir un objeto igual a null", fileName, lineNumber);
         this.name = "NotThisType";
     }
 }
