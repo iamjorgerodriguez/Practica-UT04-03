@@ -34,3 +34,31 @@ class isNull extends BaseException {
         this.name = "NotThisType";
     }
 }
+
+class NotFound404 extends BaseException{
+    constructor(elem,fileName, lineNumber) {
+        super("El elemento "+elem+" no se encuentra en la lista", fileName, lineNumber);
+        this.name = "NotFound404";
+    }
+}
+
+class ElementFound extends BaseException{
+    constructor(elem,fileName, lineNumber) {
+        super("El elemento "+elem+" ya se encuentra en la lista", fileName, lineNumber);
+        this.name = "ElementFound";
+    }
+}
+
+class SameName extends BaseException{
+    constructor(nombre,fileName, lineNumber) {
+        super("El usuario "+nombre+" ya se encuentra registrado", fileName, lineNumber);
+        this.name = "SameName";
+    }
+}
+
+class SameEmail extends BaseException{
+    constructor(email,fileName, lineNumber) {
+        super("El email "+email+" ya se encuentra registrado", fileName, lineNumber);
+        this.name = "SameEmail";
+    }
+}

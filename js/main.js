@@ -42,6 +42,15 @@ class Category {
         this.#name = name;
         this.#description = description;
     }
+
+    get name(){
+        return this.#name;
+    }
+
+    
+    get description(){
+        return this.#description;
+    }
 }
 
 class Resource {
@@ -116,6 +125,14 @@ class User {
         this.#email = email;
         this.#password = password;
     }
+
+    get username(){
+        return this.#username;
+    }
+    
+    get email(){
+        return this.#email;
+    }
 }
 
 class Coordinate {
@@ -131,23 +148,23 @@ class Coordinate {
 let VideoSystem = (function () { //La función anónima devuelve un método getInstance que permite obtener el objeto único
     let instantiated; //Objeto con la instancia única ImageManager
 
-    function init() { //Inicialización del Singleton
+    function init(name) { //Inicialización del Singleton
         //Declaración de la clase VideoSystem
         class VideoSystem {
             #name;
-            #usuarios;
+            #users;
             #producciones;
             #categorias;
             #actores;
             #directores;
 
-            constructor(name, listaUsuarios = [], listaProducciones = [], listaCategorias = [], listaActores = [], listaDirectores = []) {
+            constructor(name, listaU = [], listaP = [], listaC = [], listaA = [], listaD = []) {
                 this.#name = name;
-                this.#usuarios = listaUsuarios;
-                this.#producciones = listaProducciones;
-                this.#categorias = listaCategorias;
-                this.#actores = listaActores;
-                this.directores = listaDirectores;
+                this.#users = listaU;
+                this.#producciones = listaP;
+                this.#categorias = listaC;
+                this.#actores = listaA;
+                this.#directores = listaD;
             }
 
             get name() {
@@ -175,20 +192,84 @@ let VideoSystem = (function () { //La función anónima devuelve un método getI
             }
 
             //Añade una categoría a la colección de categorias
-            addCategory() {
+            addCategory(categoria) {
+                this.#categorias.push(categoria);
 
+                return this.#categorias.length;
             }
+
+            //Elimina una categoría en caso de que se encuentre en this.#categorias
+            removeCategory(categoria){
+                let i=this.findItemsLists(categoria, this.#categorias);
+
+                if (i == -1) throw new NotFound404(categoria);
+                
+                this.#categorias.splice(i,1);
+
+                return this.#categorias.length;
+            }
+
+            //Iterador de usuarios
+            get users() {
+                let listUsers = this.#users;
+                //Retorno el objeto [Symbol.iterator]
+                return {
+                    *[Symbol.iterator]() {
+                        for (let i = 0; i < listUsers.length; i++) {
+                            yield listUsers[i];
+                        }
+                    }
+                }
+            }
+
+            //Añade una usuario a la lista de usuarios
+            addUser(usuario) {
+                for(let userList of this.#users){
+                    //Controla que el nombre del usuario no se encuentre ya registrado
+                    if (usuario.username == userList.username) throw new SameName(usuario.username);
+                    //Controla que el email del usuario no se encuentre ya registrado
+                    if (usuario.email == userList.email) throw new SameEmail(usuario.email);
+                }
+
+                this.#users.push(usuario);
+
+                return this.#users.length;
+            }
+
+            /**
+             * Función que buscará elementos en 
+             * su respectiva lista
+             * @param {*} elem 
+             * @param {*} lista 
+             * @returns -1 si no se ha encontrado el elemento.
+             *          Cualquier número, si se ha encontrado.
+             */
+
+            findItemsLists(elem,lista){
+                //Posición del elemento a eliminar en la lista
+                let i=0, j=-1;
+
+                for(let listaElem of lista){
+                    if (listaElem === elem) {
+                        j=i;
+                    }
+                    i++;
+                }
+
+                return j;
+            }
+            
         }
 
-        let instance = new VideoSystem();//Devolvemos el objeto ImageManager para que sea una instancia única.
+        let instance = new VideoSystem(name);//Devolvemos el objeto ImageManager para que sea una instancia única.
         Object.freeze(instance);
         return instance;
     } //Fin inicialización del Singleton
     return {
         // Devuelve un objeto con el método getInstance
-        getInstance: function () {
+        getInstance: function (name) {
             if (!instantiated) { //Si la variable instantiated es undefined, priemera ejecución, ejecuta init.
-                instantiated = init(); //instantiated contiene el objeto único
+                instantiated = init(name); //instantiated contiene el objeto único
             }
             return instantiated; //Si ya está asignado devuelve la asignación.
         }
