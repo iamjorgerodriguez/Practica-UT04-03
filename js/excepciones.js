@@ -62,3 +62,10 @@ class SameEmail extends BaseException{
         this.name = "SameEmail";
     }
 }
+
+class DoesntExists extends BaseException{
+    constructor(clase,fileName, lineNumber) {
+        super("El/La "+clase+" no se encuentra asignado/a a otras producciones.", fileName, lineNumber);
+        this.name = "DoesntExists";
+    }
+}

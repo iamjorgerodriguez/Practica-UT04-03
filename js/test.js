@@ -34,6 +34,6 @@ let vs1=new VideoSystem.getInstance("Por algo");
 
 console.log(vs1.assignCategory(c1,pr2,pr3));
 console.log(vs1.assignCategory(c1,pr1));
-console.log(...vs1.productionsCategory(c1));
-console.log(vs1.deassignCategory(c1,pr1));
-console.log(...vs1.productionsCategory(c1));
+console.log(...vs1.getProductionsCategory(c1));
+console.log(vs1.deassignCategory(c1,pr1,pr2,pr3,pr3));
+console.log(...vs1.getProductionsCategory(c1));
