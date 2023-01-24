@@ -156,6 +156,7 @@ let VideoSystem = (function () { //La función anónima devuelve un método getI
             #categorias;
             #actors;
             #directors;
+            #ProduccionCategoria = new Map();
 
             constructor(name, listaU = [], listaP = [], listaC = [], listaA = [], listaD = []) {
                 this.#name = name;
@@ -396,6 +397,67 @@ let VideoSystem = (function () { //La función anónima devuelve un método getI
                 return j;
             }
             
+            assignCategory(categoria,...producciones){
+                //Contrala que la produccion no sea igual a null
+                if (producciones.indexOf(null) != -1) throw new isNull (" Production ");
+                //Contrala que la categoria no sea igual a null
+                if (categoria === null) throw new isNull (" Categoría ");
+
+                for (let i=0 ; i < producciones.length ; i++) {
+                    if (this.findItemsLists(producciones[i], this.#productions) == -1) {
+                        this.addProduction(producciones[i]);
+                    }
+                }
+
+                if (this.findItemsLists(categoria,this.#categorias) == -1) {
+                    this.addCategory(categoria);
+                }
+
+                if(this.#ProduccionCategoria.has(categoria)){
+                    this.#ProduccionCategoria.get(categoria).push(...producciones);
+                }else{
+                    this.#ProduccionCategoria.set(categoria, []);
+                    this.#ProduccionCategoria.get(categoria).push(...producciones);
+                }
+
+                return this.#ProduccionCategoria.get(categoria).length;
+            }
+
+            deassignCategory(categoria,...producciones){
+                //Contrala que la produccion no sea igual a null
+                if (producciones.indexOf(null) != -1) throw new isNull (" Production ");
+                //Contrala que la categoria no sea igual a null
+                if (categoria === null) throw new isNull (" Categoría ");
+
+                let posicion=-1;
+
+                if (!(this.#ProduccionCategoria.has(categoria))) {
+                    console.log("La categoría "+categoria+" aún no existe en el sistema");
+                }else{
+                    for (let i = 0; i < producciones.length; i++) {
+                        posicion=this.#ProduccionCategoria.get(categoria).indexOf(producciones[i]);
+                        //En caso de que se haya encontrado la categoria, se borrará la producción
+                        if (posicion != -1) {
+                            this.#ProduccionCategoria.get(categoria).splice(posicion,1);
+                        }
+                    }
+                }
+
+                return this.#ProduccionCategoria.get(categoria).length;
+            }
+
+            //Iterador de producciones asignadas a una categoria
+            getProductionsCategory(categoria) {
+                let listProCat = this.#ProduccionCategoria.get(categoria);
+                //Retorno el objeto [Symbol.iterator]
+                return {
+                    *[Symbol.iterator]() {
+                        for (let i = 0; i < listProCat.length; i++) {
+                            yield listProCat[i];
+                        }
+                    }
+                }
+            }
         }
 
         let instance = new VideoSystem(name);//Devolvemos el objeto ImageManager para que sea una instancia única.
