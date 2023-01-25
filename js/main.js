@@ -1,11 +1,11 @@
 "use strict";
 
 import{
-    Person,Category,Resource,Production,Movie,Serie,User,Coordinate}
+    Person,Category,Movie,Serie,User}
 from './clases.js';
 
 import{
-    BaseException,AbstractClass,NotThisType,NotFound404,ElementFound,SameEmail,SameName,DoesntExists,isNull}
+    NotThisType,NotFound404,ElementFound,SameEmail,SameName,DoesntExists,isNull}
 from './excepciones.js';
 
 let VideoSystem = (function () { 

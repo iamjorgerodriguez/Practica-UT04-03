@@ -28,8 +28,14 @@ let u3=new User("jorgerodri","george@gmail.com","ABCD1234");
 //Usuario que repite el email con u2
 let u4=new User("arnold","bonou2@gmail.com","24 DE ENERO");
 
+//Resource
+let r1=new Resource(189,"../video/LaMillaVerde.avi");
+
+//Coordinate
+let coor1=new Coordinate("40º 41′ 21 N","74º 02′ 40 W");
+
 //Productions
-let pr1=new Movie("La milla verde","EE.UU",new Date("Feb 18 2000"),"Paul Edgecomb es un funcionario de prisiones que vigila la milla verde, el pasillo de linóleo que los condenados a muerte recorren hasta llegar a la silla eléctrica. John Coffey, un gigantesco convicto acusado de violar y asesinar a dos niñas de nueve años, está esperando su inminente ejecución.");
+let pr1=new Movie("La milla verde","EE.UU",new Date("Feb 18 2000"),"Paul Edgecomb es un funcionario de prisiones que vigila la milla verde, el pasillo de linóleo que los condenados a muerte recorren hasta llegar a la silla eléctrica. John Coffey, un gigantesco convicto acusado de violar y asesinar a dos niñas de nueve años, está esperando su inminente ejecución.","../img/lamillaverde.jpg",r1,coor1);
 let pr2=new Movie("Terminator","EE.UU",new Date("Feb 12 1984"),"En el año 2029 las máquinas dominan el mundo. Los rebeldes que luchan contra ellas tienen como líder a John Connor, un hombre que nació en los años ochenta");
 let pr3=new Serie("Breaking Bad","EE.UU",new Date("Mar 12 2008"),"Walter White, profesor de química en un instituto, descubre que tiene cáncer de pulmón y decide trabajar junto con un ex-alumno elaborando metanfetamina de alta calidad para poder ganar dinero para que su familia se mantenga.");
 let pr4=new Movie("Vértigo","United Kingdom",new Date("Mar 12 1958"),"Scottie Fergusson (James Stewart) es un detective de la policía de San Francisco que padece de vértigo. Cuando un compañero cae al vacío desde una cornisa mientras persiguen a un delincuente, Scottie decide retirarse.");
@@ -86,7 +92,7 @@ try{
     console.log(error.message);
 }
 
-console.log("Ahora elimino el primer usuario añadido:");
+console.log("\nAhora elimino el primer usuario añadido:");
 console.log(vs1.removeUser(u1));
 console.log("Y compruebo de nuevo el contenido de la lista de Usuarios: ");
 console.log(...vs1.users);
@@ -95,6 +101,14 @@ console.log("Instancio varias producciones y añado tres de ellas a la lista de 
 console.log(vs1.addProduction(pr1));
 console.log(vs1.addProduction(pr2));
 console.log(vs1.addProduction(pr3));
+
+try{
+    console.log("Intento instanciar un objeto de la clase Production: ");
+    let abstractProduction=new Production("Una odisea en el espacio","EEUU",new Date("Jan 1 1968"));
+}catch(error){
+    console.log(error.message);
+}
+
 console.log("Compruebo el contenido de la lista de Productions: ");
 console.log(...vs1.productions);
 
@@ -163,14 +177,14 @@ console.log(...vs1.productions);
 console.log(vs1.assignCategory(c2,pr2,pr8));
 console.log("\nLista Producción Después: \n");
 console.log(...vs1.productions);
-console.log("\nDesasigno una de las producciones");
+console.log("\nDesasigno una de las producciones (Terminator): ");
 console.log(vs1.deassignCategory(c2,pr2));
 console.log("Compruebo las categorias asignadas a ciencia ficción: ");
 console.log(...vs1.getProductionsCategory(c2));
 
 try{
-    console.log("\nIntento desasignar Terminator de una categoría que no está añadida");
-    console.log(vs1.deassignCategory(c1,pr3));
+    console.log("\nIntento desasignar Interstellar de una categoría que no está añadida");
+    console.log(vs1.deassignCategory(c1,pr8));
 }catch(error){
     console.log(error.message);
 }

@@ -66,7 +66,7 @@ class Resource {
     }
 
     toString() {
-        return "Resource:\r\nDuración:"+this.#duration + "\r\nDescripción " + this.#link;
+        return "Resource:\r\nDuración:"+this.#duration + "\r\nRuta de la película " + this.#link;
     }
 }
 
@@ -100,6 +100,8 @@ class Movie extends Production {
     constructor(title, nationality, publication, synopsis, image, resource = new Resource, locations = new Coordinate) {
         //Excepción que controla que locations sea una instancia de locations
         if (!(locations instanceof Coordinate)) throw new NotThisType();
+        // Excepción que controla que resource sea una instancia de Person
+        if (!(resource instanceof Resource)) throw new NotThisType();
 
         super(title, nationality, publication, synopsis, image)
         this.#resource = resource;
